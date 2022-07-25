@@ -1,5 +1,5 @@
 const { Yup } = require("../config/yup");
-const { Users } = require("../models/users")
+const supabase = require("../config/db");
 
 async function registerController(req, res) {
     try {
@@ -13,11 +13,18 @@ async function registerController(req, res) {
         
         await schema.validate(data)
 
-        let exists = await Users.findOne({ where: { email: data.email }})
+        const exists = await supabase
+            .from('users')
+            .select('*')
+            .match({ email: data.email }) 
         
-        if(exists) throw new Error("Este email já foi cadastrado");
+        if(exists.data) throw new Error("Este email já foi cadastrado");
 
-        let created = await Users.create(data, { returning: true })
+        const created = await supabase
+            .from('users')
+            .insert([
+                { name: data.name, email: data.email, password: data.password },
+            ])
 
         res.status(201)
         return res.json(created);

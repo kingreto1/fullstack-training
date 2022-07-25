@@ -1,5 +1,5 @@
 const { Yup } = require("../config/yup");
-const { Users } = require("../models/users")
+const supabase = require("../config/db");
 
 async function updateUser(req, res) {
     try {
@@ -7,18 +7,24 @@ async function updateUser(req, res) {
 
         const { id } = req.params;   
 
-        let user = await Users.findOne({ where: { id }})
+        const user = await supabase
+            .from('users')
+            .select('*')
+            .match({ id })  
 
         if (!user) throw new Error("Usuário inválido.")
 
-        let exists = await Users.findOne({ where: { email: data.email }})
+        const exists = await supabase
+            .from('users')
+            .select('*')
+            .match({ email: data.email }) 
 
-        if (exists) throw new Error("Email já cadastrado.")
+        if (exists.data) throw new Error("Email já cadastrado.")
 
         data = {
-            name: data.name ? data.name : user.name,
-            email: data.email ? data.email : user.email,
-            password: data.password ? data.password : user.password,
+            name: data.name ? data.name : user.data.name,
+            email: data.email ? data.email : user.data.email,
+            password: data.password ? data.password : user.data.password,
         }
 
         let schema = Yup.object().shape({
@@ -29,13 +35,12 @@ async function updateUser(req, res) {
         
         await schema.validate(data)
 
-        let changedUser = await Users.upsert({
-            id,
-            ...data
-        })
+        let changedUser = await supabase
+            .from('users')
+            .update(data)
+            .match({ id })
 
-        if (!changedUser) throw new Error("Falha ao atualizar o usuário.")
-        console.log(changedUser);
+        if (!changedUser.data) throw new Error("Falha ao atualizar o usuário.")
 
         res.status(200)
         return res.json({

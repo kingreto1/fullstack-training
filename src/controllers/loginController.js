@@ -1,6 +1,6 @@
 const { Yup } = require("../config/yup");
 const { generateJwt } = require("../helpers/jwt");
-const { Users } = require("../models/users")
+const supabase = require("../config/db");
 
 async function loginController(req, res) {
     try {
@@ -13,7 +13,13 @@ async function loginController(req, res) {
         
         await schema.validate(data)
         
-        let user = await Users.findOne({ where: { email: data.email, password: data.password }})
+        const user = await supabase
+            .from('users')
+            .select('*')
+            .match({
+                email: data.email,
+                password: data.password
+            })
         
         if(!user) throw new Error("Login ou senha inválido.");
 

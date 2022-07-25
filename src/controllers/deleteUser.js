@@ -1,17 +1,22 @@
-const { Users } = require("../models/users")
+const supabase = require("../config/db");
 
 async function deleteUser(req, res) {
     try {
         const { id } = req.params;   
 
-        let user = await Users.findOne({ where: { id }})
+        const user = await supabase
+            .from('users')
+            .select('*')
+            .match({ id });
 
-        if (!user) throw new Error("Usuário inválido")
+        if (!user.data) throw new Error("Usuário inválido")
 
-        let isDelete = await Users.destroy({ where: { id }})
+        const isDeleted = await supabase
+            .from('users')
+            .select('*')
+            .match({ id });
 
-        if (!isDelete) throw new Error("Falha ao deletar usuário")
-
+        if (!isDeleted.data) throw new Error("Falha ao deletar usuário")
 
         res.status(200)
         return res.json({

@@ -1,11 +1,12 @@
-const { Users } = require("../models/users")
+const supabase = require("../config/db");
 
 async function getUser(req, res) {
     try {
         const { id } = req.params;
-        let user = await Users.findOne({
-            where: { id }
-        })    
+        const user = await supabase
+            .from('users')
+            .select('id, name, email')
+            .match({ id })   
 
         if (!user) throw new Error("Usuário não encontrado")
 
