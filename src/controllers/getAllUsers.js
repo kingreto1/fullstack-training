@@ -2,7 +2,9 @@ const supabase = require("../config/db")
 
 async function getAllUsers(req, res) {
     try {
-        let { data: users, error } = await supabase.from('users').select('*');
+        let { data: users, error } = await supabase.from('users').select('id, name, email');
+
+        console.log(error);
 
         res.status(200)
         return res.json(users)
