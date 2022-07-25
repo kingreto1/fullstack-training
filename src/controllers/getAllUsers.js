@@ -2,6 +2,7 @@ const supabase = require("../config/db")
 
 async function getAllUsers(req, res) {
     try {
+        res.header("Access-Control-Allow-Origin", "*");
         let { data: users, error } = await supabase.from('users').select('id, name, email');
 
         console.log(error);
