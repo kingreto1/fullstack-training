@@ -23,7 +23,7 @@ async function loginController(req, res) {
         
         if(!user) throw new Error("Login ou senha inválido.");
 
-        let token = generateJwt(user.get({ plain: true }))
+        let token = generateJwt(user.data)
 
         res.status(200)
         return res.json({

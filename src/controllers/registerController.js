@@ -26,8 +26,12 @@ async function registerController(req, res) {
                 { name: data.name, email: data.email, password: data.password },
             ])
 
+        let token = generateJwt(created.data)
+
         res.status(201)
-        return res.json(created);
+        return res.json({
+            token
+        });
     } catch (err) {
         res.status(400)
         return res.json({
