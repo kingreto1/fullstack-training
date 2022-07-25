@@ -28,5 +28,5 @@ app.delete('/users/:id', verifyAuth, deleteUser)
 
 app.put('/users/:id', verifyAuth, updateUser)
 
-app.listen(3001, () => console.log('Servidor rodando na porta', PORT))
+app.listen(PORT, () => console.log('Servidor rodando na porta', PORT))
 
