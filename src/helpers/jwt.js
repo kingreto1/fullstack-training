@@ -1,14 +1,14 @@
 const jwt = require('jsonwebtoken');
 
 function generateJwt(data) {
-    return jwt.sign(data, "ASKLJCBYSTRIAASDASHFAHSBGF2361572416089", {
+    return jwt.sign(data, process.env.SECRET_TOKEN, {
 
     })
 }
 
 function validateJwt(data) {
     try {
-        const AuthUser = jwt.verify(data, "ASKLJCBYSTRIAASDASHFAHSBGF2361572416089")
+        const AuthUser = jwt.verify(data, process.env.SECRET_TOKEN)
 
         return AuthUser;
     } catch (error) {

@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const { registerController } = require('../controllers/registerController');
@@ -8,7 +10,7 @@ const { getUser } = require('../controllers/getUser');
 const { deleteUser } = require('../controllers/deleteUser');
 const { updateUser } = require('../controllers/updateUser');
 
-const PORT = 3001;
+const PORT = process.env.API_PORT || 3000;
 
 const app = express();
 
