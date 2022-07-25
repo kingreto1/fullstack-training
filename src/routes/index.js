@@ -10,7 +10,7 @@ const { getUser } = require('../controllers/getUser');
 const { deleteUser } = require('../controllers/deleteUser');
 const { updateUser } = require('../controllers/updateUser');
 
-const PORT = process.env.API_PORT || 3000;
+const PORT = process.env.PORT || 3000;
 
 const app = express();
 
