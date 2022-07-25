@@ -10,7 +10,6 @@ async function loginController(req, res) {
             email: Yup.string().required("Email é obrigatório").label("Email"),
             password: Yup.string().min(4).required("Senha é obrigatória").label("Senha") 
         })
-        
         await schema.validate(data)
         
         const user = await supabase
@@ -19,11 +18,12 @@ async function loginController(req, res) {
             .match({
                 email: data.email,
                 password: data.password
-            })
+            });
+            
+        if(user.data.length == 0) throw new Error("Login ou senha inválido.");
         
-        if(!user) throw new Error("Login ou senha inválido.");
-
-        let token = generateJwt(user.data)
+        let token = generateJwt(data)
+        console.log(user.data);
 
         res.status(200)
         return res.json({
@@ -31,9 +31,7 @@ async function loginController(req, res) {
         });
     } catch (err) {
         res.status(400)
-        return res.json({
-            message: err.message
-        })
+        return console.log('erro: '+err.message);
     }
 }
 
