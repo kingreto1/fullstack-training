@@ -4,7 +4,6 @@ const supabase = require("../config/db");
 
 async function loginController(req, res) {
     try {
-        res.header("Access-Control-Allow-Origin", "*");
         const data = req.body
 
         let schema = Yup.object().shape({
